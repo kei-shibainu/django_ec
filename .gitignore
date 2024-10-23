@@ -1,4 +1,15 @@
-.env
-*.log
-*.pyc
-__pycache__/
+# 環境設定ファイル
+**/*.env
+
+# Pythonのコンパイル済みファイル
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# マイグレーションファイルのキャッシュ
+**/migrations/__pycache__/
+**/migrations/0*.py
+
+# VSCode settings
+.devcontainer/
+.vscode/
