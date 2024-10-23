@@ -1,5 +1,6 @@
 # 環境設定ファイル
-**/*.env
+.env
+.env.dev
 
 # Pythonのコンパイル済みファイル
 **/__pycache__/
