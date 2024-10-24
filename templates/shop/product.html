@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}My Book Shop|詳細ページ{% endblock title %}
+{% block title %}My Book Shop - 商品詳細{% endblock title %}
 
 {% block main %}
 <!-- Product section-->
@@ -31,13 +31,15 @@
           <input
             class="form-control text-center me-3"
             id="inputQuantity"
-            type="num"
-            value="1"
-            style="max-width: 3rem"
+            type="number"
+            value={% if product.stock == 0 %}"0"{% else %}"1"{% endif %}
+            min="0"
+            max="{{product.stock}}"
+            style="max-width: 4rem"
           />
-          <button class="btn btn-outline-dark flex-shrink-0" type="button">
+          <button class="btn btn-outline-dark flex-shrink-0" type="button" {% if product.stock == 0 %}disabled{% endif %}>
             <i class="bi-cart-fill me-1"></i>
-            Add to cart
+            {% if product.stock == 0 %}Sold Out{% else %}Add to cart{% endif %}
           </button>
         </div>
       </div>
