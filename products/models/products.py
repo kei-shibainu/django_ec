@@ -2,7 +2,7 @@ from django.db import models
 import uuid
 
 def file_upload_path(instance, filename):
-    return f'static/uploads/{instance.id}/{filename}'
+    return f'uploads/{instance.id}/{filename}'
 
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
