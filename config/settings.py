@@ -22,11 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 root = environ.Path(BASE_DIR)
 
-# env_file = root('.env')
-# if os.path.exists(env_file):
-#     env.read_env(env_file)
+env_file = root('.env')
+if os.path.exists(env_file):
+    env.read_env(env_file)
 
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env.str('SECRET_KEY')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
 ]
 
-# if not DEBUG:
-INSTALLED_APPS.append('cloudinary')
-INSTALLED_APPS.append('cloudinary_storage')
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+if not DEBUG:
+    INSTALLED_APPS.append('cloudinary')
+    INSTALLED_APPS.append('cloudinary_storage')
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
