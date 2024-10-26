@@ -10,6 +10,9 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        db_table = 'Categories'
 
 # Create your models here.
 class Product(models.Model):
@@ -25,7 +28,7 @@ class Product(models.Model):
     image = models.ImageField(default='', upload_to=file_upload_path, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='categories')
 
     def save(self, *args, **kwargs):
         if 0 < self.discount_rate:
@@ -37,3 +40,6 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        db_table = 'Products'
