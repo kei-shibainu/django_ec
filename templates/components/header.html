@@ -15,22 +15,19 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url "products" %}">Home</a>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#!">購入履歴</a></li>
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
             id="navbarDropdown"
-            href="#"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
-            >Admin</a
+            >管理者</a
           >
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#!">Login</a></li>
+            <li><a class="dropdown-item" href="{% url "admin-products" %}">商品一覧</a></li>
+            <li><a class="dropdown-item" href="#!">商品登録</a></li>
           </ul>
         </li>
       </ul>
