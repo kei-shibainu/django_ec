@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Book Shop - 商品一覧{%endblock title %}
+
+{% block main %}
+<section class="py-5">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div
+      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+    >
+      {% for item in products %}
+      {% include "components/item_box.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock main %}

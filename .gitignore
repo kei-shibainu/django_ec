@@ -1,5 +1,5 @@
 # 環境設定ファイル
-**/*.env
+.env
 
 # Pythonのコンパイル済みファイル
 **/__pycache__/
@@ -13,3 +13,5 @@
 # VSCode settings
 .devcontainer/
 .vscode/
+
+**/media/
