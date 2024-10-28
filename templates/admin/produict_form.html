@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_tags %}
+{% block title %}My Book Shop - 商品登録{% endblock title %}
+
+{% block main %}
+<!-- Product section-->
+<section>
+  <div class="container px-4 px-lg-5 my-5">
+    <form action="" method="post"  enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="row">
+        {% for field in form %}
+          <div class="col-md-6 mb-4">
+            <label for="{{ field.id_for_label }}">
+              <strong>{{ field.label }}</strong>
+            </label>
+            {{ field|add_class:"form-control" }}
+            {{ field.errors }}
+          </div>
+        {% endfor %}
+      </div>
+      <button class="btn btn-outline-dark" type="submit">登録</button>
+    </form>
+  </div>
+</section>
+{% endblock main %}

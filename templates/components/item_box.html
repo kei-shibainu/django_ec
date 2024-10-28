@@ -1,4 +1,4 @@
-
+{% load static %}
 <div class="col mb-5">
   <div class="card h-100">
     <!-- Sale badge-->
@@ -6,7 +6,8 @@
     <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
     {% endif %}
     <!-- Product image-->
-    <img class="card-img-top" style="width: 100%; height: 100%; object-fit: contain;" src="{{ item.image.url }}"/>
+    <img class="card-img-top" style="width: 100%; height: 100%; object-fit: contain;"
+    src="{% if item.image %}{{ item.image.url }}{% else %}{% static 'image/default.jpeg' %}{% endif %}" />
 
     <!-- Product details-->
     <div class="card-body p-4">
@@ -39,10 +40,10 @@
 
     <!-- Product actions-->
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-      <div class="text-center">
+      <div class="text-center d-flex justify-content-center">
         {% if request.path == '/admin/products/' %}
-        <button class="btn btn-outline-dark flex-shrink-0" type="button">Edit</button>
-        <button class="btn btn-outline-dark flex-shrink-0" type="button">Delete</button>
+        <a class="btn btn-outline-dark flex-shrink-0 mx-2" href="{% url "admin-update-product" item.pk %}">Edit</a>
+        <a class="btn btn-outline-dark flex-shrink-0 mx-2" href="{% url "admin-delete-product" item.pk %}">Delete</a>
         {% else %}
         <button class="btn btn-outline-dark flex-shrink-0" type="button" {% if item.stock == 0 %}disabled{% endif %}>
         {% if item.stock == 0 %}Sold Out{% else %}Add to cart{% endif %}
