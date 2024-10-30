@@ -8,6 +8,11 @@ class IndexListView(ListView):
     template_name = "index.html"
     context_object_name = 'products'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'My Book Shop - 商品一覧'
+        return context
+
 class ProductDetailView(DetailView):
     model = Product
     template_name = "shop/product.html"

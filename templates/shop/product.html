@@ -10,7 +10,7 @@
       <div class="col-md-6">
         <img
           class="card-img-top mb-5 mb-md-0"
-          src="{{product.image.url}}"
+          src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'image/default.jpeg' %}{% endif %}" 
           alt="..."
         />
       </div>
@@ -35,7 +35,7 @@
             value={% if product.stock == 0 %}"0"{% else %}"1"{% endif %}
             min="0"
             max="{{product.stock}}"
-            style="max-width: 4rem"
+            style="max-width: 5rem"
           />
           <button class="btn btn-outline-dark flex-shrink-0" type="button" {% if product.stock == 0 %}disabled{% endif %}>
             <i class="bi-cart-fill me-1"></i>
