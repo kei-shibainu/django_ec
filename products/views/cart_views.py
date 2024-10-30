@@ -12,13 +12,13 @@ class CartListView(ListView):
     template_name = "cart/cart.html"
 
     def get(self, request, *args, **kwargs):
-        cart = request.session.get('cart', {})
+        cart = request.session.setdefault('cart', {'products': OrderedDict()})
         if not cart.get('products'):
             return redirect('/')
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        cart = self.request.session.get('cart', {})
+        cart = self.request.session.setdefault('cart', {'products': OrderedDict()})
         self.queryset = []
         self.total = 0
         for id, quantity in cart['products'].items():
