@@ -13,7 +13,7 @@ class Product(models.Model):
     sold_quantity = models.PositiveIntegerField(default=0, editable=False, verbose_name="販売数")
     review = models.PositiveIntegerField(default=0, editable=False, verbose_name="レビュー")
     discount_rate = models.PositiveIntegerField(default=0, verbose_name="割引率")
-    discount_price = models.PositiveIntegerField(default=0, editable=False, verbose_name="割引率")
+    discount_price = models.PositiveIntegerField(default=0, editable=False, verbose_name="割引価格")
     image = models.ImageField(default='', upload_to=file_upload_path, blank=True, verbose_name="画像")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="更新日")
