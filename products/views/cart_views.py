@@ -31,8 +31,8 @@ class CartListView(ListView):
         
         for cart_product in self.cart_products:
             product = cart_product.product
-            quantity = cart_product.quantity
-            product.total = int(product.discount_price * quantity)
+            product.quantity = cart_product.quantity
+            product.total = int(product.discount_price * product.quantity)
             queryset.append(product)
             self.total += product.total
         return queryset
