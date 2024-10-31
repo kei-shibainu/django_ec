@@ -30,7 +30,7 @@
         <div class="d-flex">
           <form action="{% url "cart-add" %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="id" value="{{ product.pk }}">
+            <input type="hidden" name="product_id" value="{{ product.pk }}">
             <input
               class="form-control text-center me-3"
               id="inputQuantity"

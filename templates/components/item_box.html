@@ -39,7 +39,7 @@
         {% else %}
         <form action="{% url "cart-add" %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="id" value="{{item.pk}}">
+          <input type="hidden" name="product_id" value="{{item.pk}}">
           <input type="hidden" name="quantity" value="1">
           <button class="btn btn-outline-dark flex-shrink-0" type="submit" {% if item.stock == 0 %}disabled{% endif %}>
           {% if item.stock == 0 %}

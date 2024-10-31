@@ -1,19 +1,17 @@
-from collections import OrderedDict
-from products.models.products import Product
+import uuid
+from products.models.carts import Cart, CartProduct
 
 def cart_count(request):
-    cart = request.session.setdefault('cart', {'products': OrderedDict()})
-
-    # 存在しないカート情報の場合はカートから商品を削除(カート追加後に商品が削除された場合の考慮)
-    removes = []
-    for id in list(cart.get('products').keys()):
+    session_id = request.session.get('session_id', None)
+    if session_id:
         try:
-            Product.objects.get(pk=id)
-        except Product.DoesNotExist:
-            del cart['products'][id]
-    request.session['cart'] = cart
+            cart = Cart.objects.get(id=uuid.UUID(session_id))
+            cart_count = CartProduct.objects.filter(cart=cart).count()
+        except(Cart.DoesNotExist, CartProduct.DoesNotExist):
+            cart_count = 0
+    else:
+        cart_count = 0
 
     return {
-        'cart_count': len(cart.get('products', OrderedDict()).values()),
-        'cart': cart,
+        'cart_count': cart_count,
     }
