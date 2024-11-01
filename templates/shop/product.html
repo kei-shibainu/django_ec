@@ -28,19 +28,28 @@
           {{product.description}}
         </p>
         <div class="d-flex">
-          <input
-            class="form-control text-center me-3"
-            id="inputQuantity"
-            type="number"
-            value={% if product.stock == 0 %}"0"{% else %}"1"{% endif %}
-            min="0"
-            max="{{product.stock}}"
-            style="max-width: 5rem"
-          />
-          <button class="btn btn-outline-dark flex-shrink-0" type="button" {% if product.stock == 0 %}disabled{% endif %}>
-            <i class="bi-cart-fill me-1"></i>
-            {% if product.stock == 0 %}Sold Out{% else %}Add to cart{% endif %}
-          </button>
+          <form action="{% url "cart-add" %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ product.pk }}">
+            <input
+              class="form-control text-center me-3"
+              id="inputQuantity"
+              name="quantity"
+              type="number"
+              value={% if product.stock == 0 %}"0"{% else %}"1"{% endif %}
+              min="0"
+              max="{{product.stock}}"
+              style="max-width: 5rem"
+            />
+            <button class="btn btn-outline-dark flex-shrink-0" type="submit" {% if product.stock == 0 %}disabled{% endif %}>
+              <i class="bi-cart-fill me-1"></i>
+              {% if product.stock == 0 %}
+              Sold Out
+              {% else %}
+              Add to cart
+              {% endif %}
+            </button>
+          </form>
         </div>
       </div>
     </div>

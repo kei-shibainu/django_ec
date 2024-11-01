@@ -20,14 +20,6 @@
           <a class="text-secondary" href="{% url "product" item.id %}">{{item.name}}</a>
           {% endif %}
         </h5>
-        <!-- Product reviews-->
-        <div class="d-flex justify-content-center small text-warning mb-2">
-          <div class="bi-star-fill"></div>
-          <div class="bi-star-fill"></div>
-          <div class="bi-star-fill"></div>
-          <div class="bi-star-fill"></div>
-          <div class="bi-star-fill"></div>
-        </div>
 
         {% if 0 < item.discount_rate %}
         <span class="text-muted text-decoration-line-through">¥{{ item.price }}</span>
@@ -42,12 +34,21 @@
     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
       <div class="text-center d-flex justify-content-center">
         {% if request.path == '/admin/products/' %}
-        <a class="btn btn-outline-dark flex-shrink-0 mx-2" href="{% url "admin-update-product" item.pk %}">Edit</a>
-        <a class="btn btn-outline-dark flex-shrink-0 mx-2" href="{% url "admin-delete-product" item.pk %}">Delete</a>
+        <a class="btn btn-outline-dark flex-shrink-0 mx-2" href="{% url "admin-update-product" item.pk %}">編集</a>
+        <a class="btn btn-outline-dark flex-shrink-0 mx-2" href="{% url "admin-delete-product" item.pk %}">削除</a>
         {% else %}
-        <button class="btn btn-outline-dark flex-shrink-0" type="button" {% if item.stock == 0 %}disabled{% endif %}>
-        {% if item.stock == 0 %}Sold Out{% else %}Add to cart{% endif %}
-        </button>
+        <form action="{% url "cart-add" %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{item.pk}}">
+          <input type="hidden" name="quantity" value="1">
+          <button class="btn btn-outline-dark flex-shrink-0" type="submit" {% if item.stock == 0 %}disabled{% endif %}>
+          {% if item.stock == 0 %}
+          Sold Out
+          {% else %}
+          Add to cart
+          {% endif %}
+          </button>
+        </form>
         {% endif %}
       </div>
     </div>
