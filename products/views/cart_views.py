@@ -55,7 +55,7 @@ class DeleteCartView(View):
             return redirect('/')
         
         cart = get_object_or_404(Cart, id=uuid.UUID(session_id))
-        cart_product = CartProduct.objects.filter(cart=cart, product_id=uuid.UUID(pk))
+        cart_product = CartProduct.objects.filter(cart=cart, product_id=uuid.UUID(pk)).first()
         if cart_product:
             cart_product.delete()
 
