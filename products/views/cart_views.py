@@ -17,29 +17,20 @@ class CartListView(ListView):
 
         try:
             self.cart = Cart.objects.get(id=uuid.UUID(session_id))
-            self.cart_products = CartProduct.objects.filter(cart=self.cart)
-            if self.cart_products.count() == 0:
+            self.cart_products = self.cart.cart_products.all()
+            if not self.cart_products.exists():
                 return redirect('/')
-        except (Cart.DoesNotExist, CartProduct.DoesNotExist):
+        except (Cart.DoesNotExist):
             return redirect('/')
 
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        self.total = 0
-        queryset = []
-        
-        for cart_product in self.cart_products:
-            product = cart_product.product
-            product.quantity = cart_product.quantity
-            product.total = int(product.discount_price * product.quantity)
-            queryset.append(product)
-            self.total += product.total
-        return queryset
+        return self.cart.calculate_total()
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["total"] = self.total
+        context["total"] = self.cart.total
         return context
 
 class AddCartView(View):
