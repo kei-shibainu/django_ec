@@ -1,5 +1,5 @@
 import uuid
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic.list import ListView
 
@@ -11,16 +11,13 @@ class CartListView(ListView):
     template_name = "cart/cart.html"
 
     def get(self, request, *args, **kwargs):
-        session_id = request.session.get('session_id', None)
+        session_id = request.session.get('session_id')
         if session_id is None:
             return redirect('/')
 
-        try:
-            self.cart = Cart.objects.get(id=uuid.UUID(session_id))
-            self.cart_products = self.cart.cart_products.all()
-            if not self.cart_products.exists():
-                return redirect('/')
-        except (Cart.DoesNotExist):
+        self.cart = get_object_or_404(Cart, id=uuid.UUID(session_id))
+        cart_products = self.cart.cart_products.all()
+        if not cart_products.exists():
             return redirect('/')
 
         return super().get(request, *args, **kwargs)
@@ -45,23 +42,21 @@ class AddCartView(View):
             cart = Cart.objects.create()
             request.session['session_id'] = str(cart.id)
         
-        product = Product.objects.filter(id=uuid.UUID(product_id)).first()
-        if product:
-            cart_product, _ = CartProduct.objects.get_or_create(cart=cart, product=product)
-            cart_product.quantity += quantity
-            cart_product.save()
+        product = get_object_or_404(Product, id=uuid.UUID(product_id))
+        cart_product, _ = CartProduct.objects.get_or_create(cart=cart, product=product)
+        cart_product.quantity += quantity
+        cart_product.save()
         return redirect('/cart/')
 
 class DeleteCartView(View):
     def get(self, request, pk):
         session_id = request.session.get('session_id')
-        if not session_id:
-            return redirect('/') 
-
-        try:
-            cart = Cart.objects.get(id=uuid.UUID(session_id))
-            cart_product = CartProduct.objects.get(cart=cart, product_id=uuid.UUID(pk))
+        if session_id is None:
+            return redirect('/')
+        
+        cart = get_object_or_404(Cart, id=uuid.UUID(session_id))
+        cart_product = CartProduct.objects.filter(cart=cart, product_id=uuid.UUID(pk))
+        if cart_product:
             cart_product.delete()
-        except(Cart.DoesNotExist, CartProduct.DoesNotExist):
-            pass
+
         return redirect('/cart/')
