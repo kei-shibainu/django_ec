@@ -6,7 +6,7 @@ def cart_count(request):
     if session_id:
         try:
             cart = Cart.objects.get(id=uuid.UUID(session_id))
-            cart_count = cart.cart_products.count()
+            cart_count = cart.cart_products.filter(product__is_deleted=False).count()
         except(Cart.DoesNotExist):
             cart_count = 0
     else:

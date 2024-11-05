@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_tags %}
+{% block title %}My Book Shop - 購入明細一覧{% endblock title %}
+
+{% block main %}
+<main>
+  <div>
+    <div class="container px-3 px-lg-4 py-4 d-flex flex-column gap-3">
+      <div>
+        <h2>基本情報</h2>
+        <table class="table table-light table-striped-columns table-borderless">
+          <thead>
+            <tr>
+              <th class="table-dark" scope="col" style="width: 30%;">#</th>
+              <th class="table-dark" scope="col" style="width: 70%;">内容</th>
+            </tr>
+          </thead>
+        <tbody>
+            <tr>
+              <th>ユーザー名</th>
+              <td>{{ order.customer.user_name }}</td>
+            </tr>
+            <tr>
+              <th>氏名</th>
+              <td>{{ order.customer.last_name }} {{order.customer.first_name}}</td>
+            </tr>
+            <tr>
+              <th scope="row">メールアドレス</th>
+              <td>{{ order.customer.email }}</td>
+            </tr>
+            <tr>
+              <th scope="row">郵便番号</th>
+              <td>{{ order.customer.zip }}</td>
+            </tr>
+            <tr>
+              <th scope="row">都道府県</th>
+              <td>{{ order.customer.prefecture.name }}</td>
+            </tr>
+            <tr>
+              <th scope="row">住所</th>
+              <td>{{ order.customer.address }}</td>
+            </tr>
+            <tr>
+              <th scope="row">建物名</th>
+              <td>{{ order.customer.address2 }}</td>
+            </tr>
+        </tbody>
+        </table>
+      </div>
+      <div>
+        <h2>注文内容</h2>
+        <table class="table table-light table-striped-columns table-borderless">
+        <thead>
+          <tr>
+            <th class="table-dark" scope="col" style="width: 30%;">#</th>
+            <th class="table-dark" scope="col" style="width: 70%;">内容</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <th>注文番号</th>
+              <td>{{ order.order_id }}</td>
+            </tr>
+            <tr>
+              <th>合計</th>
+              <td>{{ order.total }} 円</td>
+            </tr>
+        </tbody>
+        </table>
+      </div>
+      <h2>商品詳細</h2>
+      {% for order_product in order.orderproduct_set.all %}
+      <div>
+        <table class="table table-light table-striped-columns table-borderless">
+        <thead>
+          <tr>
+            <th class="table-dark" scope="col" style="width: 30%;">#</th>
+            <th class="table-dark" scope="col" style="width: 70%;">内容</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <th>商品番号</th>
+              <td>{{ order_product.product.id }}</td>
+            </tr>
+            <tr>
+              <th>商品名</th>
+              <td>{{ order_product.product.name }}</td>
+            </tr>
+            <tr>
+              <th>単価</th>
+              <td>{{ order_product.product.discount_price }} 円</td>
+            </tr>
+            <tr>
+              <th>数量</th>
+              <td>{{ order_product.quantity }}</td>
+            </tr>
+            <tr>
+              <th>合計</th>
+              <td>{{ order_product.total }} 円</td>
+            </tr>
+        </tbody>
+        </table>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+{% endblock main %}
