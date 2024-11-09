@@ -40,5 +40,7 @@ class CartProduct(models.Model):
 
     class Meta:
         db_table = 'cart_products'
-        unique_together = ('cart', 'product')
+        constraints = [
+            models.UniqueConstraint(fields=['cart', 'product'], name='unique_cart')
+        ]
 

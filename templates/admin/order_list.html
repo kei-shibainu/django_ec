@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_tags %}
+{% block title %}My Book Shop - 購入明細{% endblock title %}
+
+{% block main %}
+<main>
+  <div class="py-5">
+    <div class="container px-3 px-lg-4">
+        <table class="table table-light table-striped">
+        <thead>
+            <tr>
+            <th scope="col">注文番号</th>
+            <th scope="col">ユーザー名</th>
+            <th scope="col">姓</th>
+            <th scope="col">名</th>
+            <th scope="col">メールアドレス</th>
+            <th scope="col">注文日時</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+            <th scope="row"><a href="{% url "admin-order" order.order_id %}">{{ order.order_id }}</a></th>
+            <td>{{ order.customer.user_name }}</td>
+            <td>{{ order.customer.last_name }}</td>
+            <td>{{ order.customer.first_name }}</td>
+            <td>{{ order.customer.email }}</td>
+            <td>{{ order.order_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+  </div>
+</main>
+
+{% endblock main %}

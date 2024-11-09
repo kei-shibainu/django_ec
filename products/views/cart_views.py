@@ -4,11 +4,13 @@ from django.views import View
 from django.views.generic.list import ListView
 
 from products.models.carts import Cart, CartProduct
+from products.models.customers import Prefecture
 from products.models.products import Product
 
 class CartListView(ListView):
     model = Product
     template_name = "cart/cart.html"
+    context_object_name = 'carts'
 
     def get(self, request, *args, **kwargs):
         session_id = request.session.get('session_id')
@@ -28,6 +30,7 @@ class CartListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["total"] = self.cart.total
+        context['prefectures'] = Prefecture.objects.all()
         return context
 
 class AddCartView(View):
