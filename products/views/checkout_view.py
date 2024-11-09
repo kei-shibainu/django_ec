@@ -36,10 +36,10 @@ class CheckOutCreateView(CreateView):
         with transaction.atomic():
             for product in queryset:
                 if product['stock'] == 0:
-                    messages.error(self.request, f'『{product['name']}』は現在在庫切れです。別の商品をご検討いただくか、後ほど再度ご確認ください。')
+                    messages.error(self.request, f'『{product["name"]}』は現在在庫切れです。別の商品をご検討いただくか、後ほど再度ご確認ください。')
                     return self._render_error_context(form, cart, queryset)
                 elif product['stock'] < product['quantity']:
-                    messages.error(self.request, f'『{product['name']}』は現在、在庫数が「{product['stock']}」です。購入数を減らすか、数量を再確認してください。')
+                    messages.error(self.request, f'『{product["name"]}』は現在、在庫数が「{product["stock"]}」です。購入数を減らすか、数量を再確認してください。')
                     return self._render_error_context(form, cart, queryset)
 
             try:
