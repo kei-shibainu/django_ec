@@ -3,6 +3,7 @@ from django.db import models
 
 from products.models.customers import Customer
 from products.models.products import Product
+from products.models.promotion_codes import PromotionCode
 
 class Order(models.Model):
     order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -10,6 +11,7 @@ class Order(models.Model):
     order_date = models.DateField(auto_now_add=True, verbose_name='注文日')
     product = models.ManyToManyField(Product, through='OrderProduct')
     total = models.PositiveIntegerField(default=0)
+    promotion_code = models.ForeignKey(PromotionCode, on_delete=models.SET_NULL, related_name='order', null=True)
 
     class Meta:
         db_table = 'orders'

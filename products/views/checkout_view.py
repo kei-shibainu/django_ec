@@ -23,7 +23,7 @@ class CheckOutCreateView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         session_id = self.request.session.get('session_id')
         if not session_id:
-            messages.error(self.request, 'カートに商品がありません。もう一度カートに登録してください。')
+            messages.error(request, 'カートが見つかりません。再度お試しください。')
             return redirect('/')
         return super().dispatch(request, *args, **kwargs)
 
@@ -31,24 +31,23 @@ class CheckOutCreateView(CreateView):
         session_id = self.request.session.get('session_id')
         cart = get_object_or_404(Cart, id=session_id)
         customer = form.save()
-
-        total = sum(cart_product.quantity * cart_product.product.discount_price for cart_product in cart.cart_products.all())
+        queryset = cart.calculate_total()
         
         with transaction.atomic():
-            for cart_product in cart.cart_products.all():
-                product = Product.objects.select_for_update().get(id=cart_product.product.id)
-                if product.stock == 0:
-                    messages.error(self.request, f'『{product.name}』は現在在庫切れです。別の商品をご検討いただくか、後ほど再度ご確認ください。')
-                    return self._render_error_context(form, cart)
-                elif product.stock < cart_product.quantity:
-                    messages.error(self.request, f'『{product.name}』は現在、在庫数が「{product.stock}」です。購入数を減らすか、数量を再確認してください。')
-                    return self._render_error_context(form, cart)
+            for product in queryset:
+                if product['stock'] == 0:
+                    messages.error(self.request, f'『{product['name']}』は現在在庫切れです。別の商品をご検討いただくか、後ほど再度ご確認ください。')
+                    return self._render_error_context(form, cart, queryset)
+                elif product['stock'] < product['quantity']:
+                    messages.error(self.request, f'『{product['name']}』は現在、在庫数が「{product['stock']}」です。購入数を減らすか、数量を再確認してください。')
+                    return self._render_error_context(form, cart, queryset)
 
             try:
                 order = Order.objects.create(
                     order_id=uuid.uuid4(),
                     customer=customer,
-                    total=total
+                    total=cart.total,
+                    promotion_code=cart.promotion_code,
                 )
                 for cart_product in cart.cart_products.all():
                     OrderProduct.objects.create(
@@ -59,6 +58,10 @@ class CheckOutCreateView(CreateView):
                     )
                     cart_product.product.stock -= cart_product.quantity
                     cart_product.product.save()
+                
+                if order.promotion_code:
+                    order.promotion_code.is_used = True
+                    order.promotion_code.save()
 
                 self._send_message(order)
                 messages.success(self.request, 'ご購入ありがとうございます！')
@@ -80,7 +83,14 @@ class CheckOutCreateView(CreateView):
 {order.customer.prefecture.name}
 {order.customer.address}
 {order.customer.address2}
-
+'''
+        if order.promotion_code:
+            message += f'''
+プロモーションコード適用：
+コード　：{order.promotion_code.code}
+割引価格：-{order.promotion_code.discount}円
+'''         
+        message += f'''
 商品明細：
 合計：{order.total}円
 '''
@@ -102,10 +112,10 @@ class CheckOutCreateView(CreateView):
     def form_invalid(self, form):
         session_id = self.request.session.get('session_id')
         cart = get_object_or_404(Cart, id=session_id)
-        return self._render_error_context(form, cart)
-
-    def _render_error_context(self, form, cart):
         queryset = cart.calculate_total()
+        return self._render_error_context(form, cart, queryset)
+
+    def _render_error_context(self, form, cart, queryset):
         context = self.get_context_data(form=form)
         context['carts'] = queryset
         context['total'] = cart.total
@@ -114,4 +124,7 @@ class CheckOutCreateView(CreateView):
         prefectures = Prefecture.objects.all()
         context['prefectures'] = prefectures
         context['selected_prefecture'] = uuid.UUID(prefecture)
+        promotion_code = cart.promotion_code
+        if promotion_code and not promotion_code.is_used:
+            context['promotion_code'] = promotion_code
         return self.render_to_response(context=context)

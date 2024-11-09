@@ -30,22 +30,25 @@
             </div>
           </li>
           {% endfor %}
+          {% if promotion_code %}
           <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
             <div class="text-success">
               <h6 class="my-0">プロモーションコード</h6>
-              <small>EXAMPLECODE</small>
+              <small>{{promotion_code.code}}</small>
             </div>
-            <span class="text-success">−$5</span>
+            <span class="text-success">-{{promotion_code.discount}}円</span>
           </li>
+          {% endif %}
           <li class="list-group-item d-flex justify-content-between">
             <span>合計</span>
             <strong>{{total}}円</strong>
           </li>
         </ul>
 
-        <form class="card p-2">
+        <form class="card p-2" method="post" action="{% url "cart-promotion" %}">
+          {% csrf_token %}
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Promo code">
+            <input type="text" class="form-control" name="promotion_code" id="promotion_code" placeholder="Promo code">
             <button type="submit" class="btn btn-secondary">適用</button>
           </div>
         </form>
