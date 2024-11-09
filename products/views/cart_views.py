@@ -16,7 +16,6 @@ class CartListView(ListView):
     def get(self, request, *args, **kwargs):
         session_id = request.session.get('session_id')
         if session_id is None:
-            messages.error(request, 'カートが見つかりません。再度お試しください。')
             return redirect('/')
 
         self.cart = get_object_or_404(Cart, id=uuid.UUID(session_id))
