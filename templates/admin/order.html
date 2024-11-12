@@ -62,6 +62,16 @@
               <th>注文番号</th>
               <td>{{ order.order_id }}</td>
             </tr>
+            {% if order.promotion_code %}
+            <tr>
+              <th>プロモーションコード</th>
+              <td>{{ order.promotion_code.code }}</td>
+            </tr>
+            <tr>
+              <th>割引額</th>
+              <td>-{{ order.promotion_code.discount }} 円</td>
+            </tr>
+            {% endif %}
             <tr>
               <th>合計</th>
               <td>{{ order.total }} 円</td>

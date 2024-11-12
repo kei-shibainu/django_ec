@@ -16,7 +16,6 @@ class CheckOut(forms.ModelForm):
 
         if expiration_year is None or expiration_month is None:
             raise ValidationError('有効期限を正しく設定してください。')
-
         localtime = timezone.localtime(timezone.now()).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         try:
             expiration_date = timezone.make_aware(datetime(int(expiration_year), int(expiration_month), 1), timezone.get_current_timezone())
